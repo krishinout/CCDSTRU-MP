@@ -225,6 +225,29 @@ void Replace(gameSets *sets, int go, position pos)
     
 }
 
+/* This function is used when a player chooses their own cell/piece
+ * @param sets is a pointer that represents where specific cells will be stored
+ * @param pos is a struct that represents the position of the selected cell
+ * @Param good is an integer that acts as a flag that determines if if a cell was already chosen once and stored in set S
+ * @param go is the flag that determines a player's turn 
+ */
+void Update(gameSets *sets, position pos, int *good, int go)
+{
+    *good = 0; // resets it
+
+    if(sets->S[pos.row][pos.col] == 0)  // if not in set S, stores it and action is validated
+    {
+        sets->S[pos.row][pos.col] = 1;
+        *good = 1;
+    }
+
+    else if(*good == 0 && sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) // if in S but not in T
+    {
+        sets->T[pos.row][pos.col] = 1; // adds to set S and cell reacts, possible chain reaction
+        Expand(sets, go, pos);
+    }
+}
+
 /*This function determines the players' movement on the board
     * @param position is a pointer to the gameSets struct
     * @param go is a pointer that represents the player's turn, 1 for R and 0 for B
