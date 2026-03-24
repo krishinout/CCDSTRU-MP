@@ -2,23 +2,29 @@
 #define MAX_ROWS 3
 #define MAX_COLS 3
 
-
-
 typedef struct
 {
     int R[MAX_ROWS][MAX_COLS];
     int B[MAX_ROWS][MAX_COLS];
     int S[MAX_ROWS][MAX_COLS];
     int T[MAX_ROWS][MAX_COLS];
+    int I[MAX_ROWS][MAX_COLS]; //important during starting phase so the the other player cant chose the R/B already placed
     int amtR;
     int amtB;
 } gameSets;
+
 
 typedef struct
 {
     int row;
     int col;
-}position;
+}location;
+
+
+void Expand(gameSets *sets, int go, location pos);
+void Replace(gameSets *sets, int go, location pos);
+// necessary for recurssion
+
 
 
 
