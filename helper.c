@@ -6,7 +6,11 @@
 #define RESET "\x1b[0m"
 #include "defs.h"
 
-void inputCords(int *x, int *y)
+/*	This is a void function that asks the player where they would like to place their "charge"
+	@param x is the left to right (horizonal) coordinates on the game board plane
+	@param y is the up and down (vertical) coordinates on the game board plane 
+*/
+void inputCoords(int *x, int *y)
 {
     do
     {
@@ -21,9 +25,12 @@ void inputCords(int *x, int *y)
 
     (*x)--;
     (*y)--;
-    
 }
 
+/*	This is a void function that is used to empty/reset the game board
+	@struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow" 
+	@param game is a pointer that sends ___ data to the gameSets structure 
+*/
 void emptyBoard(gameSets *game)
 {
     int i;
@@ -45,9 +52,11 @@ void emptyBoard(gameSets *game)
 }
 
 
-/*This function displays the board
-* @param game is a pointer to the gameSets struct*/
-void printBoard(gameSets, *game)
+/*	This function gives a visual display of the game board for the player(s)
+	@struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow" 
+	@param game is a pointer that sends ___ data to the gameSets structure
+*/
+void printBoard(gameSets *game)
 {
     int i;
     int j;
@@ -109,14 +118,18 @@ void printBoard(gameSets, *game)
     printf("  -------------------\n\n");
 }
 
-/*This function removes a piece's position from a set
-* @param position is a pointer to the gameSets struct
-* @param go is an integer that represents a player's turn, 1 for R and 0 for B
-* @param row is an integer that represents the row position
-* @param col is an integer that represents the column position*/
-void remove(gameSets *position, int go, location pos)
+/*	This function removes a piece/charge's position from a set
+	@struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow"
+	@struct location tracks the location of the current cell  
+	@param position is a pointer that sends position data to the gameSets struct
+	@param playerTurn is an integer that represents the player's turn, 1 for R and 0 for B
+	@param pos sends data of the current position coordinates to the location struct
+	@param row is an integer that represents the row position
+	@param col is an integer that represents the column position
+*/
+void remove(gameSets *position, int playerTurn, location pos)
 {
-    if(go)
+    if(playerTurn)
     {
         position->R[pos.row][pos.col] = 0;
         position->amtR--;
@@ -132,16 +145,19 @@ void remove(gameSets *position, int go, location pos)
     position->T[row][col] = 0;
 }
 
-/* This function simulates a chain reaaction or explosion
- * @param sets is a pointer that represents the sets where specific cells will be stored
- * @param go determines a player's turn
- * @param pos is the location of the triggered cell*/
-void expand(gameSets *sets, int go, location pos) //note: still has bugs?? when i was testing
+/*	This function simulates a chain reaction or explosion when the cell reaches the maximum limit of "charges" stored
+	@struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow"
+	@struct location tracks the location of the current cell
+	@param sets is a pointer that represents the sets where specific cells will be stored
+	@param playerTurn is an integer that represents the player's turn, 1 for R and 0 for B
+	@param pos sends data of the current position coordinates to the location struct
+*/
+void expand(gameSets *sets, int playerTurn, location pos) //note: still has bugs?? when i was testing
 {
-    location u, d, k, r;
+    location u, d, k, r;	// u = up, d = down, k = left, r = right
     //--
     u.row = pos.row - 1;
-    u.col = pos.col; //nakalimutan initialize yun mga col/row (prev garbage value lang sila)
+    u.col = pos.col; 		
     //--
     d.row = pos.row + 1;
     d.col = pos.col;
@@ -152,38 +168,40 @@ void expand(gameSets *sets, int go, location pos) //note: still has bugs?? when 
     r.row = pos.row;
     r.col = pos.col + 1;
 
-    remove(sets, go, pos); // removes the cell that triggered the expansion
+    remove(sets, playerTurn, pos);	// removes the cell that triggered the expansion
 
     // this portion replaces the the selected neighboring cells + a chance of a chain reaction
-    if(go==1)
+    if(playerTurn==1)
         if (u.row >= 0)
-            replace(sets, go, u);
-    else if(go==0)
+            replace(sets, playerTurn, u);
+    else if(playerTurn==0)
         if (d.row < 3)
-            replace(sets, go, d);
+            replace(sets, playerTurn, d);
     
     if (k.col >= 0)
-        replace(sets, go, k);
+        replace(sets, playerTurn, k);
     if (r.col < 3)
-        replace(sets, go, r);
+        replace(sets, playerTurn, r);
 }
 
-/*This function checks the neighboring cells after expansion and determines whether a 
- chain reaction will continue
- * @param sets is a pointer to the gameSets struct
- * @param go is a flag that determines a player's turn
- * @param pos is a struct that represents a specific cell's coordinates
-  */
-void replace(gameSets *sets, int go, location pos)
+/*	This function checks the neighboring cells after expansion and determines whether a chain reaction will continue
+	@struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow" 
+	@struct location tracks the location of the current cell
+	@param sets is a pointer that sends ___ data to the gameSets structure
+	@param playerTurn is an integer that represents the player's turn, 1 for R and 0 for B
+	@param pos sends data of the current position coordinates to the location struct
+*/
+void replace(gameSets *sets, int playerTurn, location pos)
 {
     int found = 0; // like a flag that determines if may second explosion or expansion
 
-    /* This portion checks what neighboring pieces are taken and sets found to 1. It checks if: 
+/*	This portion checks what neighboring pieces are taken and sets found to 1. It checks if: 
     (1) The other player's
     (2) Their own 
-    (3) A free slot */
+    (3) A free slot 
+*/
 
-    if(go) // player R's turn
+    if(playerTurn) // player R's turn
     {
         if(sets->B[pos.row][pos.col] == 1) // if in set B, remove and found = 1
         {
@@ -220,7 +238,7 @@ void replace(gameSets *sets, int go, location pos)
         }
     }
 
-    /* After a piece is found, it gets stored to S and T */
+	// After a piece is found, it gets stored to S and T
     if(found == 1)
     {
        if(sets->S[pos.row][pos.col] == 0) // If not in set S, it's added there
@@ -232,45 +250,49 @@ void replace(gameSets *sets, int go, location pos)
        else if(sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) // if in set S, but in set T, another explosion/expansion will happen
        {
             sets->T[pos.row][pos.col]= 1;
-            expand(sets, go, pos);
+            expand(sets, playerTurn, pos);
        }  
     }
     
 }
 
-/* This function is used when a player chooses their own cell/piece
- * @param sets is a pointer that represents where specific cells will be stored
- * @param pos is a struct that represents the position of the selected cell
- * @Param good is an integer that acts as a flag that determines if if a cell was already chosen once and stored in set S
- * @param go is the flag that determines a player's turn 
+/*	This function is used when a player chooses their own cell/piece
+	@struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow" 
+	@struct location represents the location of the current cell
+	@param sets is a pointer that represents where specific cells will be stored
+	@param check_charge is an integer that acts as a flag that determines if if a cell was already chosen once and stored in set S
+	@param playerTurn is an integer that represents the player's turn, 1 for R and 0 for B
+	@param pos sends data of the current position coordinates to the location struct
  */
-void update(gameSets *sets, location pos, int *good, int go)
+void update(gameSets *sets, location pos, int *check_charge, int playerTurn)
 {
-    *good = 0; // resets it
+    *check_charge = 0;					// initializes the current "charge level"
 
     if(sets->S[pos.row][pos.col] == 0)  // if not in set S, stores it and action is validated
     {
         sets->S[pos.row][pos.col] = 1;
-        *good = 1;
+        *check_charge = 1;
     }
 
-    else if(*good == 0 && sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) // if in S but not in T
+    else if(*check_charge == 0 && sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) // if in S but not in T
     {
         sets->T[pos.row][pos.col] = 1; // adds to set S and cell reacts, possible chain reaction
-        expand(sets, go, pos);
+        expand(sets, playerTurn, pos);
     }
 }
 
-/*This function determines the players' movement on the board
-    * @param position is a pointer to the gameSets struct
-    * @param go is a pointer that represents the player's turn, 1 for R and 0 for B
-    * @param good is a pointer that represents if the player's turn is done
-    * @param over is a pointer that represents if the game is over or not
-    * @param val is a pointer that represent how many rounds had elapsed
-    * @param start is a pointer that indicates if both players had done their first turn
-    * @param row is an integer that represent the row position
-    * @param col is an integer that represent the column position*/
-void nextPlayerMove(gameSets *position, int *go, int *good, int *over, int *val, int *start)
+/*	This function determines if it's either Player R or Player B's turn
+	@struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow" 
+	@param position is a pointer that sends ___ data to the gameSets struct
+	@param playerTurn is an integer that represents the player's turn, 1 for R and 0 for B
+	@param turn_end is a pointer that represents if the current player's turn is over
+	@param game_end is a pointer that represents if the game is over or not
+	@param rounds_elapsed is a pointer that represents how many rounds have happened throughout the game
+	@param start is a pointer that indicates if both players have already done their first turn
+	@param row is an integer that represent the row position
+	@param col is an integer that represent the column position
+*/
+void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *game_end, int *rounds_elapsed, int *start)
 {
     int valid = 0;
     int x;
@@ -278,26 +300,26 @@ void nextPlayerMove(gameSets *position, int *go, int *good, int *over, int *val,
     location input;
 
 
-    if (*over == 0 && *start == 1 && *go == 1) // Player R's first turn
+    if (*game_end == 0 && *start == 1 && *playerTurn == 1) // Player R's first turn
     {
         printf("Player R it's your move\n\n");
         while(!valid)
         {
-            inputCords(&x,&y);
+            inputCoords(&x,&y);
             if (position->I[x][y] == 0)
             {
                 position->I[x][y] = 1;
                 position->R[x][y] = 1;
                 position->amtR++;
                 position->S[x][y] = 1;
-                *good = 1;
+                *turn_end = 1;
                 valid = 1;  
             }
             else
-                printf("\nPosistion is already taken\n\n");
+                printf("\nPosition is already taken\n\n");
         }
     }
-    else if (*over == 0 && *start == 1 && *go == 0) // Player B's first turn
+    else if (*game_end == 0 && *start == 1 && *playerTurn == 0) // Player B's first turn
     {
         printf("Player B it's your move\n\n");
         while(!valid)
@@ -311,15 +333,15 @@ void nextPlayerMove(gameSets *position, int *go, int *good, int *over, int *val,
                 position->B[x][y] = 1;
                 position->amtB++;
                 position->S[x][y] = 1;
-                *good = 1;
+                *turn_end = 1;
                 valid = 1;
             }
             else
-                printf("\nPosistion is already taken\n\n");
+                printf("\nThis position is already taken!\n\n");
         }
     }
     //------------------------------------------------------------------------//
-    if (*over == 0 && *start == 0 && *go == 1 )
+    if (*game_end == 0 && *start == 0 && *playerTurn == 1 )
     {
         printf("Player R it's your move\n\n");
             while(!valid)
@@ -328,15 +350,15 @@ void nextPlayerMove(gameSets *position, int *go, int *good, int *over, int *val,
                 if (position->R[x][y] == 1)
                     valid = 1;
                 else
-                    printf("\nPosistion invalid\n\n");
+                    printf("\nInvalid Position\n\n");
             }
             input.row = x;
             input.col = y;
-            update(position,input,good,*go);
+            update(position,input,good,*playerTurn);
             printf("Hey you chose your taken spot Player R\n");
-            *good = 1;
+            *turn_end = 1;
     }
-    else if (*over == 0 && *start == 0 && *go == 0 )
+    else if (*game_end == 0 && *start == 0 && *go == 0 )
     {
         printf("Player B it's your move\n\n");
         while(!valid)
@@ -345,23 +367,23 @@ void nextPlayerMove(gameSets *position, int *go, int *good, int *over, int *val,
             if (position->B[x][y] == 1)
                 valid = 1;
             else
-                printf("\nPosition invalid\n\n");
+                printf("\nInvalid Position\n\n");
         }
         input.row = x;
         input.col = y;
         update(position,input,good,*go);
         printf("Hey you chose your taken spot Player B\n");
-        *good = 1;
+        *turn_end = 1;
     }
     //------------------------------------------------------------------------//
     if (*start == 1 && position->amtR == 1 && position->amtB == 1) // if both player already took their first turn
             *start = 0;
     //------------------------------------------------------------------------//
-    if (*over == 0 && *good == 1) //if the player is done with their move
+    if (*over == 0 && *turn_end == 1) //if the player is done with their move
         {
-            *good = !(*good);
-            *go = !(*go);
-            (*val)++;
+            *turn_end = !(*turn_end);
+            *playerTurn = !(*playerTurn);
+            (*rounds_elapsed)++;
         }
 
 
