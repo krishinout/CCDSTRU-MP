@@ -47,7 +47,7 @@ void emptyBoard(gameSets *game)
 
 /*This function displays the board
 * @param game is a pointer to the gameSets struct*/
-void printBoard(gameSets *game)
+void printBoard(gameSets, *game)
 {
     int i;
     int j;
@@ -114,7 +114,7 @@ void printBoard(gameSets *game)
 * @param go is an integer that represents a player's turn, 1 for R and 0 for B
 * @param row is an integer that represents the row position
 * @param col is an integer that represents the column position*/
-void Remove(gameSets *position, int go, location pos)
+void remove(gameSets *position, int go, location pos)
 {
     if(go)
     {
@@ -136,7 +136,7 @@ void Remove(gameSets *position, int go, location pos)
  * @param sets is a pointer that represents the sets where specific cells will be stored
  * @param go determines a player's turn
  * @param pos is the location of the triggered cell*/
-void Expand(gameSets *sets, int go, location pos) //note: still has bugs?? when i was testing
+void expand(gameSets *sets, int go, location pos) //note: still has bugs?? when i was testing
 {
     location u, d, k, r;
     //--
@@ -157,15 +157,15 @@ void Expand(gameSets *sets, int go, location pos) //note: still has bugs?? when 
     // this portion replaces the the selected neighboring cells + a chance of a chain reaction
     if(go==1)
         if (u.row >= 0)
-            Replace(sets, go, u);
+            replace(sets, go, u);
     else if(go==0)
         if (d.row < 3)
-            Replace(sets, go, d);
+            replace(sets, go, d);
     
     if (k.col >= 0)
-        Replace(sets, go, k);
+        replace(sets, go, k);
     if (r.col < 3)
-        Replace(sets, go, r);
+        replace(sets, go, r);
 }
 
 /*This function checks the neighboring cells after expansion and determines whether a 
@@ -174,7 +174,7 @@ void Expand(gameSets *sets, int go, location pos) //note: still has bugs?? when 
  * @param go is a flag that determines a player's turn
  * @param pos is a struct that represents a specific cell's coordinates
   */
-void Replace(gameSets *sets, int go, location pos)
+void replace(gameSets *sets, int go, location pos)
 {
     int found = 0; // like a flag that determines if may second explosion or expansion
 
@@ -232,7 +232,7 @@ void Replace(gameSets *sets, int go, location pos)
        else if(sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) // if in set S, but in set T, another explosion/expansion will happen
        {
             sets->T[pos.row][pos.col]= 1;
-            expand(&sets, go, pos);
+            expand(sets, go, pos);
        }  
     }
     
@@ -244,7 +244,7 @@ void Replace(gameSets *sets, int go, location pos)
  * @Param good is an integer that acts as a flag that determines if if a cell was already chosen once and stored in set S
  * @param go is the flag that determines a player's turn 
  */
-void Update(gameSets *sets, location pos, int *good, int go)
+void update(gameSets *sets, location pos, int *good, int go)
 {
     *good = 0; // resets it
 
@@ -257,7 +257,7 @@ void Update(gameSets *sets, location pos, int *good, int go)
     else if(*good == 0 && sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) // if in S but not in T
     {
         sets->T[pos.row][pos.col] = 1; // adds to set S and cell reacts, possible chain reaction
-        Expand(sets, go, pos);
+        expand(sets, go, pos);
     }
 }
 
@@ -332,7 +332,7 @@ void nextPlayerMove(gameSets *position, int *go, int *good, int *over, int *val,
             }
             input.row = x;
             input.col = y;
-            Update(position,input,good,*go);
+            update(position,input,good,*go);
             printf("Hey you chose your taken spot Player R\n");
             *good = 1;
     }
@@ -345,11 +345,11 @@ void nextPlayerMove(gameSets *position, int *go, int *good, int *over, int *val,
             if (position->B[x][y] == 1)
                 valid = 1;
             else
-                printf("\nPosistion invalid\n\n");
+                printf("\nPosition invalid\n\n");
         }
         input.row = x;
         input.col = y;
-        Update(position,input,good,*go);
+        update(position,input,good,*go);
         printf("Hey you chose your taken spot Player B\n");
         *good = 1;
     }
