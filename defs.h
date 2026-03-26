@@ -20,11 +20,16 @@ typedef struct
     int col;
 }location;
 
-
-void Expand(gameSets *sets, int go, location pos);
-void Replace(gameSets *sets, int go, location pos);
-// necessary for recurssion
-
+// Function Prototypes
+void replace(gameSets *sets, int go, location pos);
+void expand(gameSets *sets, int go, location pos);
+void inputCoords(int *x, int *y);
+void emptyBoard(gameSets *game);
+void printBoard(gameSets *game);
+void clearSet(gameSets *position, int playerTurn, location pos);
+void expand(gameSets *sets, int playerTurn, location pos);
+void update(gameSets *sets, location pos, int *check_charge, int playerTurn);
+void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *game_end, int *rounds_elapsed, int *start);
 
 
 
