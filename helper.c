@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdlib.h>
 #define MAX_ROWS 3
 #define MAX_COLS 3
@@ -15,7 +16,7 @@ void inputCoords(int *x, int *y)
     do
     {
         printf("Enter your X coordinate: ");
-        scanf("%d",x);
+        scanf("%d", x);
     }while (*x < 1 || *x > 3);
     do
     {
@@ -127,9 +128,11 @@ void printBoard(gameSets *game)
 	@param row is an integer that represents the row position
 	@param col is an integer that represents the column position
 */
-void remove(gameSets *position, int playerTurn, location pos)
+void clearSet(gameSets *position, int playerTurn, location pos)
 {
-    if(playerTurn)
+    int row, col;
+	
+	if(playerTurn)
     {
         position->R[pos.row][pos.col] = 0;
         position->amtR--;
@@ -168,7 +171,7 @@ void expand(gameSets *sets, int playerTurn, location pos) //note: still has bugs
     r.row = pos.row;
     r.col = pos.col + 1;
 
-    remove(sets, playerTurn, pos);	// removes the cell that triggered the expansion
+    clearSet(sets, playerTurn, pos);	// clears the cell that triggered the expansion
 
     // this portion replaces the the selected neighboring cells + a chance of a chain reaction
     if(playerTurn==1)
@@ -193,7 +196,7 @@ void expand(gameSets *sets, int playerTurn, location pos) //note: still has bugs
 */
 void replace(gameSets *sets, int playerTurn, location pos)
 {
-    int found = 0; // like a flag that determines if may second explosion or expansion
+    int found = 0; // like a flag that determines if there will be a second explosion or expansion
 
 /*	This portion checks what neighboring pieces are taken and sets found to 1. It checks if: 
     (1) The other player's
@@ -326,7 +329,7 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
         {
 
 
-            inputCords(&x,&y);
+            inputCoords(&x,&y);
             if (position->I[x][y] == 0)
             {
                 position->I[x][y] = 1;
@@ -346,7 +349,7 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
         printf("Player R it's your move\n\n");
             while(!valid)
             {
-                inputCords(&x,&y);
+                inputCoords(&x,&y);
                 if (position->R[x][y] == 1)
                     valid = 1;
                 else
@@ -354,16 +357,16 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
             }
             input.row = x;
             input.col = y;
-            update(position,input,good,*playerTurn);
+            update(position, input, turn_end, *playerTurn);
             printf("Hey you chose your taken spot Player R\n");
             *turn_end = 1;
     }
-    else if (*game_end == 0 && *start == 0 && *go == 0 )
+    else if (*game_end == 0 && *start == 0 && *playerTurn == 0 )
     {
         printf("Player B it's your move\n\n");
         while(!valid)
         {
-            inputCords(&x,&y);
+            inputCoords(&x,&y);
             if (position->B[x][y] == 1)
                 valid = 1;
             else
@@ -371,7 +374,7 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
         }
         input.row = x;
         input.col = y;
-        update(position,input,good,*go);
+        update(position, input, turn_end, *playerTurn);
         printf("Hey you chose your taken spot Player B\n");
         *turn_end = 1;
     }
@@ -379,7 +382,7 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
     if (*start == 1 && position->amtR == 1 && position->amtB == 1) // if both player already took their first turn
             *start = 0;
     //------------------------------------------------------------------------//
-    if (*over == 0 && *turn_end == 1) //if the player is done with their move
+    if (*game_end == 0 && *turn_end == 1) //if the player is done with their move
         {
             *turn_end = !(*turn_end);
             *playerTurn = !(*playerTurn);
