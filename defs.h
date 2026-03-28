@@ -1,5 +1,6 @@
 #define MAX_ROWS 3
 #define MAX_COLS 3
+#define MAX_ROUNDS 20
 
 
 typedef struct
@@ -24,6 +25,7 @@ typedef struct
 
 
 // Function Prototypes
+void displayHomeScreen();
 void replace(gameSets *sets, int go, location pos);
 void expand(gameSets *sets, int go, location pos);
 void inputCoords(int *x, int *y);
@@ -33,5 +35,6 @@ void clearSet(gameSets *position, int playerTurn, location pos);
 void expand(gameSets *sets, int playerTurn, location pos);
 void update(gameSets *sets, location pos, int *check_charge, int playerTurn);
 void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *game_end, int *rounds_elapsed, int *start);
-void gameOver(gameSets positions, int over);
+int gameOver(gameSets positions, int over);
+void waitForEnter();
 

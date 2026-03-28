@@ -6,7 +6,35 @@
 #define BLUE "\x1b[34m"
 #define RESET "\x1b[0m"
 #include "defs.h"
+#include "interface.c"
 
+void displayHomeScreen()
+{
+    printf("\t\tC H A I N  R E A C T I O N\n\n"); // pls change the header to make it look nicer
+
+    iSetColor(I_COLOR_RED);
+    printf("R");
+    iSetColor(I_COLOR_WHITE);
+    printf(" = PLAYER 1");
+
+    iSetColor(I_COLOR_BLUE);
+    printf("\tB");
+    iSetColor(I_COLOR_WHITE);
+    printf(" = PLAYER 2");
+
+    iSetColor(I_COLOR_YELLOW);
+    printf("\t+");
+    iSetColor(I_COLOR_WHITE);
+    printf(" = REACTING...");
+
+    iSetColor(I_COLOR_YELLOW);
+    printf("\t!");
+    iSetColor(I_COLOR_WHITE);
+    printf(" = EXPLODING!\n\n");
+
+    waitForEnter(1);
+
+}
 
 /*  This is a void function that asks the player where they would like to place their "charge"
     @param x is the left to right (horizonal) coordinates on the game board plane
@@ -14,20 +42,59 @@
 */
 void inputCoords(int *x, int *y)
 {
+    char input, extra;
+
     do
     {
-        printf("Enter your X coordinate: ");
-        scanf("%d", x);
-    }while (*x < 1 || *x > 3);
+        // scans it as a char first to avoid infinite loops
+        iSetColor(I_COLOR_CYAN);
+        printf("Enter X: ");
+        scanf(" %c%c", &input, &extra);
+
+        if(extra != '\n' || input < '1' || input > '3') {
+            iSetColor(I_COLOR_RED);
+            printf("Invalid Input, Please Press Enter And Try Again.\n");
+            scanf("%*[^\n]");
+            input = '0';
+        }
+    }while(input < '1' || input > '3');
+
+    // once a valid input is entered, it's converted to its integer equivalent
+    if(input == '1') {
+        *x = 0;
+    }
+    else if(input == '2') {
+        *x = 1;
+    }
+    else if(input == '3') {
+        *x = 2;
+    }
+
+
     do
     {
-        printf("Enter your Y coordinate: ");
-        scanf("%d",y);
-    }while (*y < 1 || *y > 3);
+        iSetColor(I_COLOR_CYAN);
+        printf("Enter Y: "); 
+        scanf(" %c%c", &input, &extra);
 
+       if(extra != '\n' || input < '1' || input > '3') {
+            iSetColor(I_COLOR_RED);
+            printf("Invalid Input, Please Press Enter And Try Again.\n");
+            scanf("%*[^\n]");
+            input = '0';
+        }
+    }while(input < '1' || input > '3');
 
-    (*x)--;
-    (*y)--;
+    if(input == '1') {
+        *y = 0;
+    }
+    else if(input == '2') {
+        *y = 1;
+    }
+    else if(input == '3') {
+        *y = 2;
+    }
+
 }
 
 
@@ -65,72 +132,108 @@ void emptyBoard(gameSets *game)
 */
 void printBoard(gameSets *game)
 {
-    int i;
-    int j;
+    int i, j, inSetS;
+    char indicator;
+    // column label
+    iSetColor(I_COLOR_YELLOW);
+    printf("          1           2           3\n");
+    printf("    +===========+===========+===========+\n");
 
-
-    printf("     1     2     3\n");
-    for (i = 0; i < 3 ; i++)
+    for(i=0; i<3; i++)
     {
-        printf("  -------------------\n");
-        printf("%d ", i + 1);
-        for (j = 0; j < 3; j++)
+        printf("    |           |           |           |\n");
+        printf("    |           |           |           |\n");
+        printf("  %d |", i+1);
+
+        for(j=0; j<3; j++)
         {
-            printf("| ");
-            if (game->R[i][j] == 1)
+           // represents what set it's in, + for set S, ! for set T
+            inSetS = game->S[i][j] + game->T[i][j];
+            if(inSetS == 0)
+                indicator = ' ';
+            else if(inSetS == 1)
+                indicator = '+';
+            else
+                indicator = '!';
+            
+            printf("    "); // the gaps sa table
+
+            // for when placing the actual piece + their indicator
+            if(game->R[i][j] == 1)
             {
-                printf(RED "R" RESET);
-                if (game->S[i][j] == 1)
-                    printf(RED "S" RESET);
-                else
-                    printf(RED "_" RESET);
-
-
-                if (game->T[i][j] == 1)
-                    printf(RED "T" RESET);
-                else
-                    printf(RED "_" RESET);
+                iSetColor(I_COLOR_RED);
+                printf("R %c", indicator);
+                iSetColor(I_COLOR_YELLOW);
             }
-               
-            else if (game->B[i][j] == 1)
+            else if(game->B[i][j] == 1)
             {
-                printf(BLUE "B" RESET);
-                if (game->S[i][j] == 1)
-                    printf(BLUE "S" RESET);
-                else
-                    printf(BLUE "_" RESET);
-
-
-                if (game->T[i][j] == 1)
-                    printf(BLUE "T" RESET);
-                else
-                    printf(BLUE "_" RESET);
+                iSetColor(I_COLOR_BLUE);
+                printf("B %c", indicator);
+                iSetColor(I_COLOR_YELLOW); // sets back to yellow because of the table
             }
             else
             {
-                printf("_");
-                if (game->S[i][j] == 1)
-                    printf("S");
-                else
-                    printf("_");
-
-
-                if (game->T[i][j] == 1)
-                    printf("T");
-                else
-                    printf("_");
+                iSetColor(I_COLOR_WHITE);
+                printf("___");
+                iSetColor(I_COLOR_YELLOW);
             }
 
-
-            printf(" ");
-
-
+            printf("    |");
         }
-        printf("|\n");
+         printf("\n");
+         printf("    |           |           |           |\n");
+         printf("    |           |           |           |\n");
+         printf("    +===========+===========+===========+\n");
     }
-    printf("  -------------------\n\n");
+        iSetColor(I_COLOR_WHITE); // so colors go back to usual after the table unless changed
+        printf("\n------------------------------------------------------------\n");
+        printf("  R = no reaction  R + = reacting...  R ! = exploding!");
+        printf("\n------------------------------------------------------------\n\n");
 }
 
+/* This function displays the player indicator
+* @param turn is a char that represents a player's turn
+*/
+void displayTurn(char turn)
+{
+    iSetColor(I_COLOR_YELLOW);
+
+     iSetColor(I_COLOR_WHITE);
+    printf("  >>> ");
+
+    if (turn == 'R'){
+        iSetColor(I_COLOR_RED);
+        printf("PLAYER R");
+    }
+
+    else {
+        iSetColor(I_COLOR_BLUE);
+        printf("PLAYER B");
+    }
+
+    iSetColor(I_COLOR_WHITE);
+    printf(" IT'S YOUR MOVE <<<\n");
+    printf("\n------------------------------------------------------------\n\n");
+}
+
+/**/
+void displayExpand(int turn, int row, int column)
+{
+    char player;
+
+    iSetColor(I_COLOR_RED);
+    printf(" \n !! BOOM !! ");
+    iSetColor(I_COLOR_WHITE);
+    
+    if(turn == 1)
+        player = 'R';
+    else
+        player = 'B';
+
+    printf("PLAYER %c TRIGGERED AN EXPLOSION AT (%d, %d)\n", player, column, row);
+
+    waitForEnter(0);
+}
 
 /*  This function removes a piece/charge's position from a set
     @struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow"
@@ -190,7 +293,6 @@ void expand(gameSets *sets, int playerTurn, location pos) //note: still has bugs
 
     clearSet(sets, playerTurn, pos);    // clears the cell that triggered the expansion
 
-
     // this portion replaces the the selected neighboring cells + a chance of a chain reaction
     if(playerTurn==1) //if your player R you can split UPWARDS, LEFT, AND RIGHT
     {
@@ -207,6 +309,9 @@ void expand(gameSets *sets, int playerTurn, location pos) //note: still has bugs
         replace(sets, playerTurn, k);
     if (r.col < 3)
         replace(sets, playerTurn, r);
+    
+    printBoard(sets);
+    displayExpand(playerTurn, pos.row, pos.col);
 }
 
 
@@ -227,8 +332,6 @@ void replace(gameSets *sets, int playerTurn, location pos)
     (2) Their own
     (3) A free slot
 */
-
-
     if(playerTurn) // player R's turn
     {
         if(sets->B[pos.row][pos.col] == 1) // if in set B, remove and found = 1
@@ -335,9 +438,13 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
     int y;
     location input;
 
+   // STARTING PHASE 
     if (*game_end == 0 && *start == 1 && *playerTurn == 1) // Player R's first turn
     {
-        printf("Player R it's your move\n\n"); //BIG NOTE [row] == Y [col] == X ==>[row][col] == [y][x]
+       // printf("Player R it's your move\n\n"); //BIG NOTE [row] == Y [col] == X ==>[row][col] == [y][x]
+       displayTurn('R');
+
+       iSetColor(I_COLOR_WHITE);
         while(!valid)
         {
             inputCoords(&x,&y);
@@ -350,13 +457,19 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
                 *turn_end = 1;
                 valid = 1;  
             }
-            else
-                printf("\nPosition is already taken\n\n");
+            else {
+                iSetColor(I_COLOR_RED);
+                printf("\nInvalid move, cell is already occupied!\n\n");
+                iSetColor(I_COLOR_WHITE);
+            }
         }
     }
     else if (*game_end == 0 && *start == 1 && *playerTurn == 0) // Player B's first turn
     {
-        printf("Player B it's your move\n\n");
+        // printf("Player B it's your move\n\n");
+        displayTurn('B');
+
+       iSetColor(I_COLOR_WHITE);
         while(!valid)
         {
             inputCoords(&x,&y);
@@ -369,21 +482,29 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
                 *turn_end = 1;
                 valid = 1;
             }
-            else
-                printf("\nThis position is already taken!\n\n");
+            else {
+                iSetColor(I_COLOR_RED);
+                printf("\nInvalid move, cell is already occupied!\n\n");
+                iSetColor(I_COLOR_WHITE);
+            }
         }
     }
     //------------------------------------------------------------------------//
+    // BATTLE/IN-GAME PHASE
     if (*game_end == 0 && *start == 0 && *playerTurn == 1 )
     {
-        printf("Player R it's your move\n\n");
+        displayTurn('R');
+
             while(!valid)
             {
                 inputCoords(&x,&y);
                 if (position->R[y][x] == 1)
                     valid = 1;
-                else
-                    printf("\nInvalid Position\n\n");
+                else {
+                    iSetColor(I_COLOR_RED);
+                    printf("\nNo piece there! Choose one of your own cells.\n\n"); // shows if player R chooses player B's cell or anything random
+                    iSetColor(I_COLOR_WHITE);
+                }
             }
             input.row = y;
             input.col = x;
@@ -392,14 +513,18 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
     }
     else if (*game_end == 0 && *start == 0 && *playerTurn == 0 )
     {
-        printf("Player B it's your move\n\n");
+        displayTurn('B');
+
             while(!valid)
             {
                 inputCoords(&x,&y);
                 if (position->B[y][x] == 1)
                     valid = 1;
-                else
-                    printf("\nInvalid Position\n\n");
+                else {
+                    iSetColor(I_COLOR_RED);
+                    printf("\nNo piece there! Choose one of your own cells.\n\n"); // shows if player R chooses player B's cell or anything random
+                    iSetColor(I_COLOR_WHITE);
+                }
             }
             input.row = y;
             input.col = x;
@@ -420,13 +545,30 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
 
 }
 
-void gameOver(gameSets positions, int game_end)
+int gameOver(gameSets positions, int game_end)
 {
-    if (game_end && positions.amtR > positions.amtB)
-        printf("Congratulations Player R!! You are the winner of this match :3c");
-    else if (game_end && positions.amtR < positions.amtB)
-        printf("Congratulations Player B!! You are the winner of this match :3c");
-    else if (game_end && positions.amtR == positions.amtB)
-        printf("How unfortunate its tie :Tc, There's a second time");
+    int winner;
+    // 1 for red, 2 for blue, 0 for tie
 
+    if (game_end && positions.amtR > positions.amtB)
+        winner = 1;
+    else if (game_end && positions.amtR < positions.amtB)
+        winner = 2;
+    else if (game_end && positions.amtR == positions.amtB)
+       winner = 0;
+
+    return winner;
+}
+
+void waitForEnter(int spacing)
+{
+    char c;
+    if(spacing == 0)
+        printf("\nPress Enter To Continue...");
+    else
+        printf("\t\tPress Enter To Continue...");
+    c = getchar();
+    while (c != '\n') {
+        c = getchar();
+    }
 }
