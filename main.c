@@ -21,7 +21,7 @@ int main()
     int freeSpaces;
     gameSets position;
    
-    iClear(0, 0, 100, 150);
+    iClear(0, 0, 100, 120);
     emptyBoard(&position);
     displayHomeScreen();
 
@@ -37,7 +37,7 @@ int main()
         if (!game_end)
         {
                 // waitForEnter();
-            iClear(0, 0, 100, 150);
+            iClear(0, 0, 100, 120);
 
             displayTitle();
 
@@ -52,7 +52,7 @@ int main()
         }
     }
 
-    iClear(0, 0, 100, 150);
+    iClear(0, 0, 100, 120);
     gameOver(position,game_end, rounds_elapsed);
 
 
