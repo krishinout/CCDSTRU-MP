@@ -2,7 +2,15 @@
 #define MAX_COLS 3
 #define MAX_ROUNDS 20
 
-
+/*	This is a structure that keeps track of important data sets that are used within the game
+	@param R 
+	@param B
+	@param S
+	@param T
+	@param I
+	@param amtR
+	@param amtB
+*/
 typedef struct
 {
     int R[MAX_ROWS][MAX_COLS];
@@ -14,9 +22,10 @@ typedef struct
     int amtB;
 } gameSets;
 
-
-
-
+/*	This is a structure is utilized to access/update the informations of cells on the game board
+	@param row is used
+	@param col is used
+*/
 typedef struct
 {
     int row;
