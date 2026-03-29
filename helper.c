@@ -10,29 +10,45 @@
 
 void displayHomeScreen()
 {
-    printf("\t\tC H A I N  R E A C T I O N\n\n"); // pls change the header to make it look nicer
+    displayTitle();
 
+    printf("\n\n\t\t\t    LEGEND\n");
+    printf("\t\t--------------------------------\n");
     iSetColor(I_COLOR_RED);
-    printf("R");
+    printf("\t\t  R");
     iSetColor(I_COLOR_WHITE);
-    printf(" = PLAYER 1");
+    printf(" = PLAYER 1\n");
 
     iSetColor(I_COLOR_BLUE);
-    printf("\tB");
+    printf("\t\t  B");
     iSetColor(I_COLOR_WHITE);
-    printf(" = PLAYER 2");
+    printf(" = PLAYER 2\n");
 
     iSetColor(I_COLOR_YELLOW);
-    printf("\t+");
+    printf("\t\t  +");
     iSetColor(I_COLOR_WHITE);
-    printf(" = REACTING...");
+    printf(" = piece is reacting...\n");
 
     iSetColor(I_COLOR_YELLOW);
-    printf("\t!");
+    printf("\t\t  !");
     iSetColor(I_COLOR_WHITE);
-    printf(" = EXPLODING!\n\n");
+    printf(" = piece is exploding!\n");
+    printf("\t\t--------------------------------\n\n\n");
 
     waitForEnter(1);
+
+}
+
+void displayTitle()
+{
+    printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n");
+    iSetColor(I_COLOR_YELLOW);
+    printf("  _______ _____   _____  __  ___  _______  ___________________  _  __\n");
+    printf(" / ___/ // / _ | /  _/ |/ / / _ \\/ __/ _ |/ ___/_  __/  _/ __ \\/ |/ /\n");
+    printf("/ /__/ _  / __ |_/ //    / / , _/ _// __ / /__  / / _/ // /_/ /    / \n");
+    printf("\\___/_//_/_/ |_/___/_/|_/ /_/|_/___/_/ |_\\___/ /_/ /___/\\____/_/|_/\n\n");
+    iSetColor(I_COLOR_WHITE);
+    printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
 
 }
 
@@ -596,8 +612,11 @@ void waitForEnter(int spacing)
     char c;
     if(spacing == 0)
         printf("\nPress Enter To Continue...");
-    else if(spacing == 1)
-        printf("\t\tPress Enter To Continue...");
+    else if(spacing == 1) {
+        iSetColor(I_COLOR_GREEN);
+        printf("\t\t> > > PRESS ENTER TO START < < <");
+        iSetColor(I_COLOR_WHITE);
+    }
     else if(spacing == 2)
         printf("\t\tPress Enter To Exit...");
 
