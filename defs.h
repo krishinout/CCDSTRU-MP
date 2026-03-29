@@ -48,7 +48,6 @@ void displayEndStats(gameSets pos, int val);
 
 // Main/Spec functions
 void replace(gameSets *sets, int go, location pos);
-void expand(gameSets *sets, int go, location pos);
 void removeSet(gameSets *position, int playerTurn, location pos);
 void expand(gameSets *sets, int playerTurn, location pos);
 void update(gameSets *sets, location pos, int *check_charge, int playerTurn);
