@@ -144,7 +144,7 @@ void inputCoords(int *x, int *y)
 
 /*  This is a void function that is used to empty/reset the game board
     @struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow"
-    @param game is a pointer that sends ___ data to the gameSets structure
+    @param game is a pointer that sends cell occupancy data to the gameSets structure
 */
 void emptyBoard(gameSets *game)
 {
@@ -169,10 +169,9 @@ void emptyBoard(gameSets *game)
 
 
 
-
 /*  This function gives a visual display of the game board for the player(s)
     @struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow"
-    @param game is a pointer that sends ___ data to the gameSets structure
+    @param game is a pointer that collects cell occupancy data from the gameSets structure and uses it to show a visual of cell occupancy
 */
 void printBoard(gameSets *game)
 {
@@ -367,7 +366,7 @@ void expand(gameSets *sets, int playerTurn, location pos) //0-------------------
 /*  This function checks the neighboring cells after expansion and determines whether a chain reaction will continue
     @struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow"
     @struct location tracks the location of the current cell
-    @param sets is a pointer that sends ___ data to the gameSets structure
+    @param sets is a pointer that sends set data to the gameSets structure
     @param playerTurn is an integer that represents the player's turn, 1 for R and 0 for B
     @param pos sends data of the current position coordinates to the location struct
 */
@@ -465,7 +464,7 @@ void update(gameSets *sets, location pos, int *check_charge, int playerTurn) //0
 
 /*  This function determines if it's either Player R or Player B's turn
     @struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow"
-    @param position is a pointer that sends ___ data to the gameSets struct
+    @param position is a pointer that sends position data to the gameSets struct
     @param playerTurn is an integer that represents the player's turn, 1 for R and 0 for B
     @param turn_end is a pointer that represents if the current player's turn is over
     @param game_end is a pointer that represents if the game is over or not
@@ -585,10 +584,16 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
             (*rounds_elapsed)++;
         }
 
-
 }
 
-void gameOver(gameSets positions, int game_end, int val)
+
+/*	This function determines and displays the final game results and stats once a player wins the game
+	@struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow"
+	@param positions collects cell occupancy data from the gameSets struct and uses that data to display how many cells are occupied by each player
+	@param game_end is a pointer that represents if the game is over or not
+	@param rounds_elapsed is a pointer that represents how many rounds have happened throughout the game
+*/
+void gameOver(gameSets positions, int game_end, int rounds_elapsed)
 {
     // 1 for red, 2 for blue, 0 for tie
 
@@ -611,11 +616,16 @@ void gameOver(gameSets positions, int game_end, int val)
         printf("IT'S A DRAW!\n\n");
     }
 
-    displayEndStats(positions, val);
+    displayEndStats(positions, rounds_elapsed);
        
 }
 
-void displayEndStats(gameSets pos, int val)
+/*	This is a purely visual function to collect and display the statistics of the recent game
+	@struct gameSets tracks which player is occupying certain cells and the current "charge states" of a cell to see if the cell will "explode" or "overflow"
+	@param pos is a pointer that collects cell occupation data from the gameSets structure and is used to return the amount of spaces each player is occupying at the end of the game 
+	@param rounds_elapsed is a pointer that represents how many rounds have happened throughout the game
+*/
+void displayEndStats(gameSets pos, int rounds_elapsed)
 {
     iSetColor(I_COLOR_WHITE);
     printf("FINAL SCORE\n\n");
@@ -634,6 +644,9 @@ void displayEndStats(gameSets pos, int val)
     waitForEnter(2);
 }
 
+/*	This function is used to clear input buffers, as well as give the player a visual for when they want to proceed to the next screen
+	@param spacing is a variable used to determine which of the three different visual cues will be displayed
+*/
 void waitForEnter(int spacing)
 {
     char c;
