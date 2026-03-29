@@ -32,12 +32,7 @@ int main()
                 // waitForEnter();
             iClear(0, 0, 100, 60);
 
-        iSetColor(I_COLOR_WHITE);
-            printf("============================================================\n");
-        //  iSetColor(I_COLOR_YELLOW);
-            printf("\t\tC H A I N  R E A C T I O N\n");
-        // iSetColor(I_COLOR_CYAN);
-            printf("============================================================\n\n");
+        displayTitle();
 
             // display lang for rounds, max rounds, and open spaces
             iSetColor(I_COLOR_WHITE);
@@ -48,12 +43,12 @@ int main()
             printf(" / %d", MAX_ROUNDS);
 
             iSetColor(I_COLOR_WHITE);
-            printf("\t\tFREE SPACE : ");
+            printf("\t\t\t\t\tFREE SPACE : ");
             iSetColor(I_COLOR_YELLOW);
-            printf("%d\n\n", freeSpaces);
+            printf("%02d\n", freeSpaces);
 
             iSetColor(I_COLOR_WHITE);
-            printf("------------------------------------------------------------\n\n");
+            printf("  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n");
 
             // for player stats naman
             iSetColor(I_COLOR_RED);
@@ -62,7 +57,7 @@ int main()
             printf("  Player B: [ %d pieces ]\n\n", position.amtB);
 
             iSetColor(I_COLOR_WHITE);
-            printf("------------------------------------------------------------\n\n");
+            printf("  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n");
 
             iSetColor(I_COLOR_WHITE);
             printBoard(&position);

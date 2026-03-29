@@ -12,7 +12,7 @@ void displayHomeScreen()
 {
     displayTitle();
 
-    printf("\n\n\t\t\t    LEGEND\n");
+    printf("\n\n\t\t\t     LEGEND\n");
     printf("\t\t--------------------------------\n");
     iSetColor(I_COLOR_RED);
     printf("\t\t  R");
@@ -41,14 +41,15 @@ void displayHomeScreen()
 
 void displayTitle()
 {
-    printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n");
+    iSetColor(I_COLOR_WHITE);
+    printf("  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n");
     iSetColor(I_COLOR_YELLOW);
     printf("  _______ _____   _____  __  ___  _______  ___________________  _  __\n");
     printf(" / ___/ // / _ | /  _/ |/ / / _ \\/ __/ _ |/ ___/_  __/  _/ __ \\/ |/ /\n");
     printf("/ /__/ _  / __ |_/ //    / / , _/ _// __ / /__  / / _/ // /_/ /    / \n");
-    printf("\\___/_//_/_/ |_/___/_/|_/ /_/|_/___/_/ |_\\___/ /_/ /___/\\____/_/|_/\n\n");
+    printf("\\___/_//_/_/ |_/___/_/|_/ /_/|_/___/_/ |_\\___/ /_/ /___/\\____/_/|_/\n\n\n");
     iSetColor(I_COLOR_WHITE);
-    printf("* * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
+    printf("  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n");
 
 }
 
@@ -202,9 +203,9 @@ void printBoard(gameSets *game)
          printf("    +===========+===========+===========+\n");
     }
         iSetColor(I_COLOR_WHITE); // so colors go back to usual after the table unless changed
-        printf("\n------------------------------------------------------------\n");
-        printf("  R = no reaction  R + = reacting...  R ! = exploding!");
-        printf("\n------------------------------------------------------------\n\n");
+       // printf("\n------------------------------------------------------------\n");
+     //   printf("  R = no reaction  R + = reacting...  R ! = exploding!");
+     //   printf("\n------------------------------------------------------------\n\n");
 }
 
 /* This function displays the player indicator
@@ -215,7 +216,7 @@ void displayTurn(char turn)
     iSetColor(I_COLOR_YELLOW);
 
      iSetColor(I_COLOR_WHITE);
-    printf("  >>> ");
+    printf("\n\n  >>> ");
 
     if (turn == 'R'){
         iSetColor(I_COLOR_RED);
@@ -228,8 +229,8 @@ void displayTurn(char turn)
     }
 
     iSetColor(I_COLOR_WHITE);
-    printf(" IT'S YOUR MOVE <<<\n");
-    printf("\n------------------------------------------------------------\n\n");
+    printf(" IT'S YOUR MOVE <<<\n\n\n");
+    //printf("\n------------------------------------------------------------\n\n");
 }
 
 /**/
