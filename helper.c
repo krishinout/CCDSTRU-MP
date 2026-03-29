@@ -469,7 +469,7 @@ void update(gameSets *sets, location pos, int *check_charge, int playerTurn) //0
         *check_charge = !*(check_charge);
     }
 
-    else if(*check_charge == 0 && sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) // if in S but not in T
+    if(*check_charge == 0 && sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) // if in S but not in T
     {
         sets->T[pos.row][pos.col] = 1; // adds to set S and cell reacts, possible chain reaction
         expand(sets, playerTurn, pos);
@@ -650,7 +650,7 @@ void displayEndStats(gameSets pos, int rounds_elapsed)
     iSetColor(I_COLOR_WHITE);
     printf("ROUNDS PLAYED :");
     iSetColor(I_COLOR_YELLOW);
-    printf(" %02d\n\n\n", val);
+    printf(" %02d\n\n\n", rounds_elapsed);
 
     waitForEnter(2);
 }
