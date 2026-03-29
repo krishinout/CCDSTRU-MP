@@ -260,26 +260,31 @@ void displayExpand(int turn, int row, int column)
     @param row is an integer that represents the row position
     @param col is an integer that represents the column position
 */
-void clearSet(gameSets *position, int playerTurn, location pos)
+void clearSet(gameSets *position, int playerTurn, location pos) //0-------------------------------------------------------------------------------0
 {
     //int row, col;
    
-    if(playerTurn)
+    if(playerTurn == 1)
     {
-        position->R[pos.row][pos.col] = 0;
-        position->amtR--;
+        if(position->R[pos.row][pos.col] == 1) // just a safety net and doesn't immediately dencrement
+        {
+            position->R[pos.row][pos.col] = 0;
+            position->amtR--;
+        }
+        
     }
-
-
     else
     {
-        position->B[pos.row][pos.col] = 0;
-        position->amtB--;
+        if(position->B[pos.row][pos.col] == 1) // just a safety net and doesn't immediately dencrement
+        {
+           position->B[pos.row][pos.col] = 0;
+            position->amtB--; 
+        }
     }
-
 
     position->S[pos.row][pos.col] = 0;
     position->T[pos.row][pos.col] = 0;
+
 }
 
 
@@ -290,7 +295,7 @@ void clearSet(gameSets *position, int playerTurn, location pos)
     @param playerTurn is an integer that represents the player's turn, 1 for R and 0 for B
     @param pos sends data of the current position coordinates to the location struct
 */
-void expand(gameSets *sets, int playerTurn, location pos) //note: still has bugs?? when i was testing
+void expand(gameSets *sets, int playerTurn, location pos) //0-------------------------------------------------------------------------------0
 {
     location u, d, k, r;    // u = up, d = down, k = left, r = right
     //--
@@ -338,7 +343,7 @@ void expand(gameSets *sets, int playerTurn, location pos) //note: still has bugs
     @param playerTurn is an integer that represents the player's turn, 1 for R and 0 for B
     @param pos sends data of the current position coordinates to the location struct
 */
-void replace(gameSets *sets, int playerTurn, location pos)
+void replace(gameSets *sets, int playerTurn, location pos) //0-------------------------------------------------------------------------------0
 {
     int found = 0; // like a flag that determines if there will be a second explosion or expansion
 
@@ -348,7 +353,7 @@ void replace(gameSets *sets, int playerTurn, location pos)
     (2) Their own
     (3) A free slot
 */
-    if(playerTurn) // player R's turn
+    if(playerTurn == 1) // player R's turn
     {
         if(sets->B[pos.row][pos.col] == 1) // if in set B, remove and found = 1
         {
@@ -376,7 +381,6 @@ void replace(gameSets *sets, int playerTurn, location pos)
             found = 1;
         }
 
-
         else if(sets->B[pos.row][pos.col] == 1) // if in set B, found = 1
             found = 1;
        
@@ -389,22 +393,18 @@ void replace(gameSets *sets, int playerTurn, location pos)
 
 
     // After a piece is found, it gets stored to S and T
-    if(found == 1)
+    if (found && sets->S[pos.row][pos.col] == 0) //changed
     {
-       if(sets->S[pos.row][pos.col] == 0) // If not in set S, it's added there
-       {
-            sets->S[pos.row][pos.col] = 1;
-            found = 0;
-       }
-
-
-       else if(sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) // if in set S, but in set T, another explosion/expansion will happen
-       {
-            sets->T[pos.row][pos.col]= 1;
-            expand(sets, playerTurn, pos);
-       }  
+        sets->S[pos.row][pos.col] = 1;
+        found = 0;
     }
-   
+    else if (found && sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) //changed
+    {
+        sets->T[pos.row][pos.col]= 1;
+        expand(sets, playerTurn, pos);
+    }
+ 
+
 }
 
 
@@ -416,7 +416,7 @@ void replace(gameSets *sets, int playerTurn, location pos)
     @param playerTurn is an integer that represents the player's turn, 1 for R and 0 for B
     @param pos sends data of the current position coordinates to the location struct
  */
-void update(gameSets *sets, location pos, int *check_charge, int playerTurn)
+void update(gameSets *sets, location pos, int *check_charge, int playerTurn) //0-------------------------------------------------------------------------------0
 {
     *check_charge = 0;                  // initializes the current "charge level"
 
@@ -424,9 +424,8 @@ void update(gameSets *sets, location pos, int *check_charge, int playerTurn)
     if(sets->S[pos.row][pos.col] == 0)  // if not in set S, stores it and action is validated
     {
         sets->S[pos.row][pos.col] = 1;
-        *check_charge = 1;
+        *check_charge = !*(check_charge);
     }
-
 
     else if(*check_charge == 0 && sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) // if in S but not in T
     {
