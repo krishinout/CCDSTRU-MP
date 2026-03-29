@@ -261,7 +261,7 @@ void displayExpand(int turn, int row, int column)
     @param row is an integer that represents the row position
     @param col is an integer that represents the column position
 */
-void clearSet(gameSets *position, int playerTurn, location pos) //0-------------------------------------------------------------------------------0
+void removeSet(gameSets *position, int playerTurn, location pos) //0-------------------------------------------------------------------------------0
 {
     //int row, col;
    
@@ -313,7 +313,7 @@ void expand(gameSets *sets, int playerTurn, location pos) //0-------------------
     r.col = pos.col + 1;
 
 
-    clearSet(sets, playerTurn, pos);    // clears the cell that triggered the expansion
+    removeSet(sets, playerTurn, pos);    // clears the cell that triggered the expansion
 
     // this portion replaces the the selected neighboring cells + a chance of a chain reaction
     if(playerTurn==1) //if your player R you can split UPWARDS, LEFT, AND RIGHT
