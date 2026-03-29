@@ -53,6 +53,33 @@ void displayTitle()
 
 }
 
+void displayInGame(int val, int freeSpaces, gameSets position) 
+{
+    iSetColor(I_COLOR_WHITE);
+    printf("  ROUND ");
+    iSetColor(I_COLOR_YELLOW);
+    printf("%02d", val);
+    iSetColor(I_COLOR_WHITE);
+    printf(" / %d", MAX_ROUNDS);
+
+    iSetColor(I_COLOR_WHITE);
+    printf("\t\t\t\t\tFREE SPACE : ");
+    iSetColor(I_COLOR_YELLOW);
+    printf("%02d\n", freeSpaces);
+
+    iSetColor(I_COLOR_WHITE);
+    printf("  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n");
+
+    // for player stats naman
+    iSetColor(I_COLOR_RED);
+    printf("  Player R: [ %d pieces ]\n\n", position.amtR);
+    iSetColor(I_COLOR_BLUE);
+    printf("  Player B: [ %d pieces ]\n\n", position.amtB);
+
+    iSetColor(I_COLOR_WHITE);
+    printf("  * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * * *\n\n");
+}
+
 /*  This is a void function that asks the player where they would like to place their "charge"
     @param x is the left to right (horizonal) coordinates on the game board plane
     @param y is the up and down (vertical) coordinates on the game board plane
