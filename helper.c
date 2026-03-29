@@ -389,10 +389,10 @@ void replace(gameSets *sets, int playerTurn, location pos) //0------------------
             sets->amtB--;
             found = 1;
         }
-        else if(sets->R[pos.row][pos.col] == 1) // if in set R, found = 1
+        if(sets->R[pos.row][pos.col] == 1) // if in set R, found = 1
             found = 1;
        
-        else if(sets->R[pos.row][pos.col] == 0) // not in set R, add to set R
+        if(sets->R[pos.row][pos.col] == 0) // not in set R, add to set R
         {
             sets->R[pos.row][pos.col] = 1;
             sets->amtR++;
@@ -409,10 +409,10 @@ void replace(gameSets *sets, int playerTurn, location pos) //0------------------
             found = 1;
         }
 
-        else if(sets->B[pos.row][pos.col] == 1) // if in set B, found = 1
+        if(sets->B[pos.row][pos.col] == 1) // if in set B, found = 1
             found = 1;
        
-        else if(sets->B[pos.row][pos.col] == 0) // if not in set B, add to set B
+        if(sets->B[pos.row][pos.col] == 0) // if not in set B, add to set B
         {
             sets->B[pos.row][pos.col] = 1;
             sets->amtB++;
@@ -426,7 +426,7 @@ void replace(gameSets *sets, int playerTurn, location pos) //0------------------
         sets->S[pos.row][pos.col] = 1;
         found = 0;
     }
-    else if (found && sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) //changed
+    if (found && sets->S[pos.row][pos.col] == 1 && sets->T[pos.row][pos.col] == 0) //changed
     {
         sets->T[pos.row][pos.col]= 1;
         expand(sets, playerTurn, pos);
