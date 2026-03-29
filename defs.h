@@ -27,6 +27,7 @@ typedef struct
 // Function Prototypes
 void displayTitle();
 void displayHomeScreen();
+void displayInGame(int val, int freeSpaces, gameSets position);
 void replace(gameSets *sets, int go, location pos);
 void expand(gameSets *sets, int go, location pos);
 void inputCoords(int *x, int *y);
