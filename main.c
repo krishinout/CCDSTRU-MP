@@ -1,8 +1,15 @@
+/******************************************************************************
+ *  Description     : Main implementation file for the C-based version of 
+ *                    the game Chain Reaction.
+ *  Author/s        : FABIALA, MATTHEW MIGUEL SABIO
+ *                    OLVINA, LENARD MATTHEW CABANGON
+ *                    SUAZON, KRISHA GEANE AQUINO
+ *  Section         : S01
+ ******************************************************************************/
+
 #include <stdio.h>
 #include <string.h>
 #include "helper.c"
-
-
 
 int main()
 {
