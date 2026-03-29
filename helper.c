@@ -559,7 +559,7 @@ void gameOver(gameSets positions, int game_end, int val)
     }
     else if (game_end && positions.amtR < positions.amtB) {
         iSetColor(I_COLOR_BLUE);
-        printf(" PLAYER B <<  ");
+        printf(" >> PLAYER B <<  ");
         iSetColor(I_COLOR_WHITE);
         printf("WINS!\n\n");
     }
