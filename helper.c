@@ -230,7 +230,7 @@ void displayExpand(int turn, int row, int column)
     else
         player = 'B';
 
-    printf("PLAYER %c TRIGGERED AN EXPLOSION AT (%d, %d)\n", player, column, row);
+    printf("PLAYER %c TRIGGERED AN EXPLOSION AT (%d, %d)\n", player, column+1, row+1);
 
     waitForEnter(0);
 }
@@ -545,19 +545,50 @@ void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *gam
 
 }
 
-int gameOver(gameSets positions, int game_end)
+void gameOver(gameSets positions, int game_end, int val)
 {
-    int winner;
     // 1 for red, 2 for blue, 0 for tie
 
-    if (game_end && positions.amtR > positions.amtB)
-        winner = 1;
-    else if (game_end && positions.amtR < positions.amtB)
-        winner = 2;
-    else if (game_end && positions.amtR == positions.amtB)
-       winner = 0;
+    iSetColor(I_COLOR_RED);
+    printf("\tGAME OVER\n\n");
 
-    return winner;
+    if (game_end && positions.amtR > positions.amtB) {
+        printf(" >> PLAYER R <<  ");
+        iSetColor(I_COLOR_WHITE);
+        printf("WINS!\n\n");
+    }
+    else if (game_end && positions.amtR < positions.amtB) {
+        iSetColor(I_COLOR_BLUE);
+        printf(" PLAYER B <<  ");
+        iSetColor(I_COLOR_WHITE);
+        printf("WINS!\n\n");
+    }
+        
+    else if (game_end && positions.amtR == positions.amtB) {
+        printf("IT'S A DRAW!\n\n");
+    }
+
+    displayEndStats(positions, val);
+       
+}
+
+void displayEndStats(gameSets pos, int val)
+{
+    iSetColor(I_COLOR_WHITE);
+    printf("FINAL SCORE\n\n");
+    printf("-----------------------------\n\n");
+      iSetColor(I_COLOR_RED);
+    printf("PLAYER R : %02d\n", pos.amtR);
+    iSetColor(I_COLOR_BLUE);
+    printf("PLAYER B : %02d\n\n", pos.amtB);
+    iSetColor(I_COLOR_WHITE);
+    printf("-----------------------------\n\n");
+    iSetColor(I_COLOR_WHITE);
+    printf("ROUNDS PLAYED :");
+    iSetColor(I_COLOR_YELLOW);
+    printf(" %02d\n\n\n", val);
+
+    waitForEnter(2);
 }
 
 void waitForEnter(int spacing)
@@ -565,8 +596,11 @@ void waitForEnter(int spacing)
     char c;
     if(spacing == 0)
         printf("\nPress Enter To Continue...");
-    else
+    else if(spacing == 1)
         printf("\t\tPress Enter To Continue...");
+    else if(spacing == 2)
+        printf("\t\tPress Enter To Exit...");
+
     c = getchar();
     while (c != '\n') {
         c = getchar();

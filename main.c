@@ -14,8 +14,9 @@ int main()
     int freeSpaces;
     gameSets position;
    
+    iClear(0, 0, 100, 60);
     emptyBoard(&position);
-
+    displayHomeScreen();
 
     //loop
     while (!game_end)
@@ -23,11 +24,43 @@ int main()
         freeSpaces = 9;
         freeSpaces = freeSpaces - (position.amtR + position.amtB);
 
-        printf("Current Board\n\n");
-        printBoard(&position);
+        // waitForEnter();
+        iClear(0, 0, 100, 60);
 
-        printf("\nplayerTurn : %d | turn_end : %d | game_end : %d \n", playerTurn, turn_end, game_end); //note: this for testing and debuggin
-        printf("rounds_elapsed : %d | start : %d | freeSpaces : %d \n\n", rounds_elapsed, start, freeSpaces); // we can edit this to improve the U.I
+       iSetColor(I_COLOR_WHITE);
+        printf("============================================================\n");
+      //  iSetColor(I_COLOR_YELLOW);
+        printf("\t\tC H A I N  R E A C T I O N\n");
+       // iSetColor(I_COLOR_CYAN);
+        printf("============================================================\n\n");
+
+        // display lang for rounds, max rounds, and open spaces
+        iSetColor(I_COLOR_WHITE);
+        printf("  ROUND ");
+        iSetColor(I_COLOR_YELLOW);
+        printf("%02d", rounds_elapsed);
+        iSetColor(I_COLOR_WHITE);
+        printf(" / %d", MAX_ROUNDS);
+
+        iSetColor(I_COLOR_WHITE);
+        printf("\t\tFREE SPACE : ");
+        iSetColor(I_COLOR_YELLOW);
+        printf("%d\n\n", freeSpaces);
+
+        iSetColor(I_COLOR_WHITE);
+        printf("------------------------------------------------------------\n\n");
+
+        // for player stats naman
+        iSetColor(I_COLOR_RED);
+        printf("  Player R: [ %d pieces ]\n\n", position.amtR);
+        iSetColor(I_COLOR_BLUE);
+        printf("  Player B: [ %d pieces ]\n\n", position.amtB);
+
+        iSetColor(I_COLOR_WHITE);
+        printf("------------------------------------------------------------\n\n");
+
+        iSetColor(I_COLOR_WHITE);
+        printBoard(&position);
 
         nextPlayerMove(&position, &playerTurn, &turn_end, &game_end, &rounds_elapsed, &start);
 
@@ -37,7 +70,8 @@ int main()
 
     }
 
-    gameOver(position,game_end);
+    iClear(0, 0, 100, 60);
+    gameOver(position,game_end, rounds_elapsed);
 
 
     return 0;

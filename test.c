@@ -70,7 +70,8 @@ int main()
 
     }
 
-    gameOver(position,game_end);
+    iClear(0, 0, 100, 60);
+    gameOver(position,game_end, rounds_elapsed);
 
 
     return 0;

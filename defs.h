@@ -35,6 +35,7 @@ void clearSet(gameSets *position, int playerTurn, location pos);
 void expand(gameSets *sets, int playerTurn, location pos);
 void update(gameSets *sets, location pos, int *check_charge, int playerTurn);
 void nextPlayerMove(gameSets *position, int *playerTurn, int *turn_end, int *game_end, int *rounds_elapsed, int *start);
-int gameOver(gameSets positions, int over);
+void gameOver(gameSets positions, int over, int val);
 void waitForEnter();
+void displayEndStats(gameSets pos, int val);
 
